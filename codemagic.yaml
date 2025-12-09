@@ -1,20 +1,31 @@
 workflows:
-  android-chaos-apex:
-    name: Build Grok Chaos Apex APK
-    max_build_duration: 60
+  android-workflow:
+    name: Grok Chaos Apex – Build APK
     instance_type: mac_mini_m2
+    max_build_duration: 60
     environment:
-      java_version: 17  # Pin to JDK 17 for stability
+      groups:
+        - android_signing   # ← you can ignore this for now (debug build doesn’t need it)
+      vars:
+        JAVA_VERSION: "17"   # ← correct way to set Java version on Codemagic
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
     scripts:
-      # Pre-build: Just make executable, no clean (avoids JVM trigger)
-      - name: Pre-build Setup
-        script: chmod +x gradlew
-      # Build the debug APK
+      - name: Make gradlew executable
+        script: |
+          chmod +x ./gradlew
       - name: Build Debug APK
-        script: ./gradlew assembleDebug
+        script: |
+          ./gradlew assembleDebug --no-daemon --stacktrace
     artifacts:
       - app/build/outputs/**/*.apk
     publishing:
       email:
         recipients:
-          - your-email@example.com  # Update with your email
+          - YOUR-EMAIL-HERE@example.com   # ← change to your real email
+        notify:
+          success: true
+          failure: true
