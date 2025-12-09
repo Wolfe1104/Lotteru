@@ -1,0 +1,17 @@
+workflows:
+  android-chaos-apex:
+    name: Build Grok Chaos Apex APK
+    max_build_duration: 60  # Minutes – plenty for our small app
+    instance_type: mac_mini_m2  # Fastest free tier
+    scripts:
+      # Build the debug APK
+      - name: Build Debug APK
+        script: ./gradlew assembleDebug
+    artifacts:
+      # Download the APK after build
+      - app/build/outputs/**/*.apk
+    publishing:
+      # Optional: Email the APK to you on success
+      email:
+        recipients:
+          - your-email@example.com  # Replace with your email
