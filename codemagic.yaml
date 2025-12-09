@@ -1,0 +1,23 @@
+workflows:
+  android:
+    name: Grok Chaos Apex – Debug APK
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: false
+    environment:
+      android_signing: []
+      vars:
+        PACKAGE_NAME: "com.grok.chaosapex"
+    triggering:
+      events:
+        - push
+    scripts:
+      - name: Build debug APK
+        script: |
+          ./gradlew assembleDebug
+    artifacts:
+      - app/build/outputs/apk/debug/*.apk
+    publishing:
+      email:
+        recipients:
+          - YOUR-EMAIL-HERE@gmail.com   # ← CHANGE THIS
