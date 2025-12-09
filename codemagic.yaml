@@ -3,12 +3,12 @@ workflows:
     name: Build Grok Chaos Apex APK
     max_build_duration: 60
     instance_type: mac_mini_m2
+    environment:
+      java_version: 17  # Pin to JDK 17 for stability
     scripts:
-      # Pre-build: Clean and make gradlew executable (fixes 127 errors)
+      # Pre-build: Just make executable, no clean (avoids JVM trigger)
       - name: Pre-build Setup
-        script: |
-          chmod +x gradlew
-          ./gradlew clean
+        script: chmod +x gradlew
       # Build the debug APK
       - name: Build Debug APK
         script: ./gradlew assembleDebug
@@ -17,4 +17,4 @@ workflows:
     publishing:
       email:
         recipients:
-          - your-email@example.com  # Your email here
+          - your-email@example.com  # Update with your email
